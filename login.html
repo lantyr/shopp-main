@@ -1,137 +1,499 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>登入</title>
+  <title>註冊帳號 - 簡易購物網站</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Noto Sans TC', Arial, sans-serif;
       background-color: #f5f5f5;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      min-height: 100vh;
       margin: 0;
+      color: #333;
     }
-    .login-container {
+    
+    .register-container {
       background-color: white;
       padding: 2rem;
       border-radius: 8px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-      width: 350px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      width: 400px;
+      max-width: 90%;
     }
-    h1 {
+    
+    .logo-container {
       text-align: center;
-      color: #333;
       margin-bottom: 1.5rem;
     }
-    .form-group {
-      margin-bottom: 1rem;
+    
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #2c3e50;
     }
+    
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 1.5rem;
+      font-weight: 500;
+    }
+    
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+    
     label {
       display: block;
       margin-bottom: 0.5rem;
       color: #555;
+      font-weight: 500;
     }
+    
     input {
       width: 100%;
       padding: 0.8rem;
       border: 1px solid #ddd;
       border-radius: 4px;
       box-sizing: border-box;
+      transition: border-color 0.3s ease;
+      font-family: inherit;
     }
+    
+    input:focus {
+      outline: none;
+      border-color: #3498db;
+      box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+    }
+    
+    .password-requirements {
+      font-size: 0.8rem;
+      color: #7f8c8d;
+      margin-top: 0.3rem;
+    }
+    
     button {
       width: 100%;
       padding: 0.8rem;
-      background-color: #4CAF50;
+      background-color: #3498db;
       color: white;
       border: none;
       border-radius: 4px;
       cursor: pointer;
       font-size: 1rem;
       margin-top: 1rem;
+      transition: background-color 0.3s ease, transform 0.1s ease;
+      font-weight: 500;
+      font-family: inherit;
     }
+    
     button:hover {
-      background-color: #45a049;
+      background-color: #2980b9;
     }
-    .register-link {
+    
+    button:active {
+      transform: scale(0.98);
+    }
+    
+    .login-link {
       text-align: center;
-      margin-top: 1rem;
+      margin-top: 1.5rem;
       color: #666;
     }
-    .register-link a {
-      color: #4CAF50;
+    
+    .login-link a {
+      color: #3498db;
       text-decoration: none;
+      transition: color 0.2s ease;
     }
-    .register-link a:hover {
+    
+    .login-link a:hover {
+      color: #2980b9;
       text-decoration: underline;
     }
+    
     .error-message {
-      color: #f44336;
+      color: #e74c3c;
       margin-top: 1rem;
       text-align: center;
+      font-size: 0.9rem;
       display: none;
+      padding: 0.5rem;
+      background-color: rgba(231, 76, 60, 0.1);
+      border-radius: 4px;
+    }
+    
+    .success-message {
+      color: #27ae60;
+      margin-top: 1rem;
+      text-align: center;
+      font-size: 0.9rem;
+      display: none;
+      padding: 0.5rem;
+      background-color: rgba(39, 174, 96, 0.1);
+      border-radius: 4px;
+    }
+    
+    .agreement {
+      font-size: 0.85rem;
+      color: #7f8c8d;
+      margin-top: 1rem;
+      text-align: center;
+    }
+    
+    .agreement a {
+      color: #3498db;
+      text-decoration: none;
+    }
+    
+    .agreement a:hover {
+      text-decoration: underline;
+    }
+    
+    .back-to-home {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      color: #3498db;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+    }
+    
+    .back-to-home:hover {
+      text-decoration: underline;
+    }
+    
+    /* 密碼強度指示器 */
+    .password-strength {
+      height: 5px;
+      margin-top: 5px;
+      border-radius: 3px;
+      transition: width 0.3s ease;
+      background-color: #ecf0f1;
+      position: relative;
+    }
+    
+    .strength-bar {
+      height: 100%;
+      border-radius: 3px;
+      width: 0;
+      transition: width 0.3s ease, background-color 0.3s ease;
+    }
+    
+    .strength-text {
+      font-size: 0.8rem;
+      margin-top: 0.3rem;
+      display: inline-block;
+    }
+    
+    /* 響應式設計 */
+    @media (max-width: 480px) {
+      .register-container {
+        padding: 1.5rem;
+      }
+      
+      h1 {
+        font-size: 1.5rem;
+      }
+      
+      .back-to-home {
+        position: static;
+        display: block;
+        text-align: center;
+        margin-top: 1rem;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="login-container">
-    <h1>登入</h1>
-    <form id="loginForm">
+  <a href="shopping.html" class="back-to-home">← 返回首頁</a>
+  
+  <div class="register-container">
+    <div class="logo-container">
+      <div class="logo">簡易購物網站</div>
+    </div>
+    
+    <h1>註冊新帳號</h1>
+    
+    <form id="registerForm">
       <div class="form-group">
         <label for="username">使用者名稱</label>
         <input type="text" id="username" required>
       </div>
+      
+      <div class="form-group">
+        <label for="email">電子郵件</label>
+        <input type="email" id="email" required>
+      </div>
+      
       <div class="form-group">
         <label for="password">密碼</label>
         <input type="password" id="password" required>
+        <div class="password-strength">
+          <div class="strength-bar" id="strengthBar"></div>
+        </div>
+        <span class="strength-text" id="strengthText"></span>
+        <div class="password-requirements">
+          密碼至少需要8個字元，包含大小寫字母和數字
+        </div>
       </div>
-      <button type="submit">登入</button>
+      
+      <div class="form-group">
+        <label for="confirmPassword">確認密碼</label>
+        <input type="password" id="confirmPassword" required>
+      </div>
+      
+      <button type="submit">建立帳號</button>
+      
       <div id="errorMessage" class="error-message"></div>
+      <div id="successMessage" class="success-message"></div>
     </form>
-    <div class="register-link">
-      還沒有帳號？<a href="register.html">立即註冊</a>
+    
+    <div class="agreement">
+      點擊「建立帳號」即表示您同意我們的<a href="#">服務條款</a>和<a href="#">隱私政策</a>
+    </div>
+    
+    <div class="login-link">
+      已有帳號？<a href="login.html">點擊登入</a>
     </div>
   </div>
 
   <script>
-    document.getElementById('loginForm').addEventListener('submit', async function(e) {
-      e.preventDefault();
+    document.addEventListener('DOMContentLoaded', function() {
+      const passwordInput = document.getElementById('password');
+      const strengthBar = document.getElementById('strengthBar');
+      const strengthText = document.getElementById('strengthText');
       
-      const username = document.getElementById('username').value;
-      const password = document.getElementById('password').value;
-      
-      // 清除之前的錯誤訊息
-      const errorMessage = document.getElementById('errorMessage');
-      errorMessage.style.display = 'none';
-      
-      try {
-        const response = await fetch('http://localhost:3000/api/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            username,
-            password
-          })
-        });
+      // 監聽密碼輸入，評估密碼強度
+      passwordInput.addEventListener('input', function() {
+        const password = this.value;
+        const strength = evaluatePasswordStrength(password);
         
-        const data = await response.json();
+        // 更新密碼強度指示器
+        updateStrengthIndicator(strength);
+      });
+      
+      // 表單提交處理
+      document.getElementById('registerForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
         
-        if (!response.ok) {
-          throw new Error(data.message || '登入失敗');
+        const username = document.getElementById('username').value;
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        
+        // 清除之前的訊息
+        const errorMessage = document.getElementById('errorMessage');
+        const successMessage = document.getElementById('successMessage');
+        errorMessage.style.display = 'none';
+        successMessage.style.display = 'none';
+        
+        // 基本驗證
+        if (!username || !email || !password || !confirmPassword) {
+          showError('請填寫所有必填欄位');
+          return;
         }
         
-        // 儲存 token
-        localStorage.setItem('token', data.token);
+        // 驗證密碼
+        if (password !== confirmPassword) {
+          showError('密碼與確認密碼不符');
+          return;
+        }
         
-        // 跳轉到首頁
-        window.location.href = 'shopping.html';
-      } catch (error) {
-        errorMessage.textContent = error.message;
+        // 驗證密碼強度
+        const strength = evaluatePasswordStrength(password);
+        if (strength.score < 2) {
+          showError('密碼強度不足，請設定更安全的密碼');
+          return;
+        }
+        
+        // 驗證電子郵件格式
+        if (!validateEmail(email)) {
+          showError('請輸入有效的電子郵件地址');
+          return;
+        }
+        
+        try {
+          // 模擬 API 呼叫（由於無後端，使用 localStorage）
+          // 檢查用戶名是否已存在
+          const users = JSON.parse(localStorage.getItem('users')) || [];
+          const existingUser = users.find(user => user.username === username || user.email === email);
+          
+          if (existingUser) {
+            if (existingUser.username === username) {
+              showError('此使用者名稱已被使用');
+            } else {
+              showError('此電子郵件已被註冊');
+            }
+            return;
+          }
+          
+          // 創建新用戶
+          const newUser = {
+            id: generateUserId(),
+            username: username,
+            email: email,
+            password: password, // 實際應用中應進行加密
+            regDate: new Date().toISOString().split('T')[0]
+          };
+          
+          // 保存用戶
+          users.push(newUser);
+          localStorage.setItem('users', JSON.stringify(users));
+          
+          // 創建會員資料
+          const memberInfo = {
+            id: newUser.id,
+            name: username,
+            email: email,
+            regDate: newUser.regDate,
+            level: '一般會員',
+            points: 0
+          };
+          
+          // 保存會員資料
+          localStorage.setItem('memberInfo', JSON.stringify(memberInfo));
+          
+          // 設置登入狀態
+          localStorage.setItem('token', 'simulated-jwt-token-' + Date.now());
+          
+          // 顯示成功訊息
+          showSuccess('註冊成功！3秒後自動跳轉至首頁...');
+          
+          // 延遲跳轉
+          setTimeout(function() {
+            window.location.href = 'shopping.html';
+          }, 3000);
+          
+        } catch (error) {
+          showError('註冊過程中發生錯誤，請稍後再試');
+          console.error('註冊錯誤:', error);
+        }
+      });
+      
+      // 輔助函數
+      
+      // 生成用戶ID
+      function generateUserId() {
+        return 'user_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
+      }
+      
+      // 顯示錯誤訊息
+      function showError(message) {
+        const errorMessage = document.getElementById('errorMessage');
+        errorMessage.textContent = message;
         errorMessage.style.display = 'block';
+      }
+      
+      // 顯示成功訊息
+      function showSuccess(message) {
+        const successMessage = document.getElementById('successMessage');
+        successMessage.textContent = message;
+        successMessage.style.display = 'block';
+      }
+      
+      // 驗證電子郵件格式
+      function validateEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+      }
+      
+      // 評估密碼強度
+      function evaluatePasswordStrength(password) {
+        // 初始分數
+        let score = 0;
+        let feedback = '';
+        
+        // 如果密碼為空，直接返回
+        if (!password) {
+          return { score: 0, feedback: '請輸入密碼' };
+        }
+        
+        // 長度檢查
+        if (password.length < 6) {
+          score = 0;
+          feedback = '密碼太短';
+        } else if (password.length < 8) {
+          score = 1;
+          feedback = '密碼較弱';
+        } else {
+          score = 2;
+          feedback = '密碼強度中等';
+        }
+        
+        // 複雜度檢查
+        const hasLower = /[a-z]/.test(password);
+        const hasUpper = /[A-Z]/.test(password);
+        const hasNumber = /[0-9]/.test(password);
+        const hasSpecial = /[^a-zA-Z0-9]/.test(password);
+        
+        // 根據複雜度增加分數
+        let complexity = 0;
+        if (hasLower) complexity++;
+        if (hasUpper) complexity++;
+        if (hasNumber) complexity++;
+        if (hasSpecial) complexity++;
+        
+        if (complexity >= 3 && password.length >= 8) {
+          score = 3;
+          feedback = '密碼強度良好';
+        }
+        
+        if (complexity >= 4 && password.length >= 10) {
+          score = 4;
+          feedback = '密碼強度極佳';
+        }
+        
+        return { score, feedback };
+      }
+      
+      // 更新密碼強度指示器
+      function updateStrengthIndicator(strength) {
+        // 設置顏色
+        let color;
+        let widthPercentage;
+        
+        switch(strength.score) {
+          case 0:
+            color = '#e74c3c'; // 紅色
+            widthPercentage = '20%';
+            break;
+          case 1:
+            color = '#f39c12'; // 橙色
+            widthPercentage = '40%';
+            break;
+          case 2:
+            color = '#f1c40f'; // 黃色
+            widthPercentage = '60%';
+            break;
+          case 3:
+            color = '#2ecc71'; // 綠色
+            widthPercentage = '80%';
+            break;
+          case 4:
+            color = '#27ae60'; // 深綠色
+            widthPercentage = '100%';
+            break;
+          default:
+            color = '#ecf0f1'; // 灰色
+            widthPercentage = '0%';
+        }
+        
+        // 更新強度條
+        strengthBar.style.backgroundColor = color;
+        strengthBar.style.width = widthPercentage;
+        
+        // 更新文字提示
+        strengthText.textContent = strength.feedback;
+        strengthText.style.color = color;
       }
     });
   </script>
