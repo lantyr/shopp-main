@@ -146,75 +146,6 @@
       border-top: 1px solid #eee;
       padding-top: 10px;
     }
-    
-    .refresh-button {
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      padding: 8px 16px;
-      text-align: center;
-      text-decoration: none;
-      display: inline-block;
-      font-size: 14px;
-      margin: 10px 0;
-      cursor: pointer;
-      border-radius: 4px;
-    }
-    
-    .notification {
-      padding: 10px;
-      background-color: #d4edda;
-      color: #155724;
-      border-radius: 4px;
-      margin-bottom: 15px;
-      display: none;
-    }
-    
-    /* 新增樣式 */
-    .cart-badge {
-      position: relative;
-      display: inline-block;
-      margin-left: 5px;
-      background-color: #e74c3c;
-      color: white;
-      border-radius: 50%;
-      width: 18px;
-      height: 18px;
-      font-size: 12px;
-      text-align: center;
-      line-height: 18px;
-    }
-    
-    .sync-status {
-      font-size: 12px;
-      color: #6c757d;
-      margin-left: 10px;
-      display: inline-block;
-    }
-    
-    .sync-active {
-      color: #28a745;
-    }
-    
-    .filter-controls {
-      margin: 15px 0;
-      display: flex;
-      gap: 10px;
-    }
-    
-    .filter-button {
-      background-color: #f8f9fa;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      padding: 5px 10px;
-      cursor: pointer;
-    }
-    
-    .filter-active {
-      background-color: #007bff;
-      color: white;
-      border-color: #007bff;
-    }
   </style>
 </head>
 <body>
@@ -224,10 +155,7 @@
       <ul>
         <li><a href="shopping.html">商品列表</a></li>
         <li><a href="member.html">會員中心</a></li>
-        <li>
-          <a href="cart.html">購物車</a>
-          <span id="cart-count" class="cart-badge" style="display: none;">0</span>
-        </li>
+        <li><a href="cart.html">購物車</a></li>
         <li><a href="orders.html">訂單查詢</a></li>
       </ul>
     </aside>
@@ -235,22 +163,9 @@
     <main class="main-content">
       <header>
         <h1>訂單查詢</h1>
-        <span id="sync-status" class="sync-status">同步狀態: <span class="sync-active">已啟用</span></span>
       </header>
 
       <div class="container">
-        <div id="notification" class="notification">
-          訂單資訊已更新！
-        </div>
-        
-        <div class="filter-controls">
-          <button id="refresh-orders" class="refresh-button">手動刷新訂單</button>
-          <button id="filter-all" class="filter-button filter-active">全部訂單</button>
-          <button id="filter-pending" class="filter-button">待處理</button>
-          <button id="filter-shipped" class="filter-button">已出貨</button>
-          <button id="filter-delivered" class="filter-button">已送達</button>
-        </div>
-        
         <div id="orders-container">
           <!-- 訂單列表將在這裡動態加載 -->
         </div>
@@ -258,166 +173,31 @@
     </main>
   </div>
 
+  <script src="shopping.js"></script>
   <script>
-    // 全局變數
-    let allOrders = [];
-    let currentFilter = 'all';
-    
-    // 當頁面加載時獲取訂單資訊和購物車
+    // 當頁面加載時獲取訂單資訊
     document.addEventListener('DOMContentLoaded', function() {
-      // 初始化頁面
       loadOrders();
-      updateCartCount();
-      
-      // 設置刷新間隔（每60秒自動刷新一次）
-      const autoRefreshInterval = setInterval(function() {
-        if (document.visibilityState === 'visible') {
-          loadOrders(false); // 自動刷新不顯示通知
-        }
-      }, 60000);
-      
-      // 添加刷新按鈕點擊事件
-      document.getElementById('refresh-orders').addEventListener('click', function() {
-        loadOrders(true);
-        showNotification('訂單已手動刷新');
-      });
-      
-      // 添加過濾按鈕事件
-      document.querySelectorAll('.filter-button').forEach(button => {
-        button.addEventListener('click', function() {
-          // 移除所有按鈕的激活狀態
-          document.querySelectorAll('.filter-button').forEach(btn => {
-            btn.classList.remove('filter-active');
-          });
-          
-          // 為當前按鈕添加激活狀態
-          this.classList.add('filter-active');
-          
-          // 根據按鈕ID設置過濾條件
-          const filterId = this.id;
-          if (filterId === 'filter-all') {
-            currentFilter = 'all';
-          } else if (filterId === 'filter-pending') {
-            currentFilter = '待處理';
-          } else if (filterId === 'filter-shipped') {
-            currentFilter = '已出貨';
-          } else if (filterId === 'filter-delivered') {
-            currentFilter = '已送達';
-          }
-          
-          // 重新渲染訂單
-          renderOrders();
-        });
-      });
-      
-      // 監聽頁面可見性變化
-      document.addEventListener('visibilitychange', function() {
-        if (document.visibilityState === 'visible') {
-          // 當頁面變為可見時，刷新訂單
-          loadOrders(false);
-          updateCartCount();
-        }
-      });
-      
-      // 監聽購物車與訂單變化
-      syncWithCart();
     });
     
-    // 顯示通知訊息
-    function showNotification(message) {
-      const notification = document.getElementById('notification');
-      notification.textContent = message;
-      notification.style.display = 'block';
-      
-      // 3秒後自動隱藏通知
-      setTimeout(function() {
-        notification.style.display = 'none';
-      }, 3000);
-    }
-    
-    // 更新購物車計數
-    function updateCartCount() {
-      const cart = JSON.parse(localStorage.getItem('cart')) || [];
-      const cartCountElement = document.getElementById('cart-count');
-      
-      if (cart.length > 0) {
-        // 計算總商品數量
-        const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
-        cartCountElement.textContent = totalItems;
-        cartCountElement.style.display = 'inline-block';
-      } else {
-        cartCountElement.style.display = 'none';
-      }
-    }
-    
-    // 同步購物車與訂單
-    function syncWithCart() {
-      // 監聽localStorage變化
-      window.addEventListener('storage', function(event) {
-        // 檢查是否是訂單或購物車的變化
-        if (event.key === 'orders') {
-          loadOrders();
-          showNotification('訂單資訊已更新！');
-        } else if (event.key === 'cart') {
-          updateCartCount();
-          
-          const oldCart = JSON.parse(event.oldValue || '[]');
-          const newCart = JSON.parse(event.newValue || '[]');
-          
-          // 如果購物車被清空，可能是結帳了，要重新加載訂單
-          if (oldCart.length > 0 && newCart.length === 0) {
-            // 延遲200毫秒再加載訂單，確保訂單已經被更新
-            setTimeout(() => {
-              loadOrders();
-              showNotification('購物車已結帳，訂單已更新！');
-            }, 200);
-          }
-        }
-      });
-    }
-    
     // 加載訂單資訊
-    function loadOrders(showLoadingNotification = false) {
-      if (showLoadingNotification) {
-        showNotification('正在加載訂單...');
-      }
-      
+    function loadOrders() {
       // 從localStorage取得訂單數據
-      allOrders = JSON.parse(localStorage.getItem('orders')) || [];
-      
-      // 渲染訂單
-      renderOrders();
-    }
-    
-    // 根據過濾條件渲染訂單
-    function renderOrders() {
+      const orders = JSON.parse(localStorage.getItem('orders')) || [];
       const ordersContainer = document.getElementById('orders-container');
       
-      // 如果沒有訂單，顯示空訂單提示
-      if (allOrders.length === 0) {
+      if (orders.length === 0) {
         ordersContainer.innerHTML = '<div class="empty-orders">您目前沒有任何訂單記錄。</div>';
-        return;
-      }
-      
-      // 依照日期排序訂單（最新的在前）
-      allOrders.sort((a, b) => new Date(b.orderDate) - new Date(a.orderDate));
-      
-      // 根據過濾條件過濾訂單
-      let filteredOrders = allOrders;
-      if (currentFilter !== 'all') {
-        filteredOrders = allOrders.filter(order => order.status === currentFilter);
-      }
-      
-      // 如果過濾後沒有訂單，顯示無符合條件的訂單
-      if (filteredOrders.length === 0) {
-        ordersContainer.innerHTML = `<div class="empty-orders">沒有${currentFilter}的訂單記錄。</div>`;
         return;
       }
       
       let html = '';
       
+      // 依照日期排序訂單（最新的在前）
+      orders.sort((a, b) => new Date(b.orderDate) - new Date(a.orderDate));
+      
       // 遍歷訂單並生成訂單卡片
-      filteredOrders.forEach(order => {
+      orders.forEach(order => {
         // 生成狀態標籤的CSS類
         let statusClass = '';
         switch(order.status) {
@@ -473,7 +253,7 @@
               <td>${item.name}</td>
               <td>NT$ ${item.price}</td>
               <td>${item.quantity}</td>
-              <td>NT$ ${(item.price * item.quantity).toFixed(0)}</td>
+              <td>NT$ ${item.price * item.quantity}</td>
             </tr>
           `;
         });
@@ -483,7 +263,7 @@
                 </table>
               </div>
               <div class="order-total">
-                總金額: NT$ ${order.totalAmount.toFixed(0)}
+                總金額: NT$ ${order.totalAmount}
               </div>
             </div>
           </div>
@@ -493,15 +273,12 @@
       ordersContainer.innerHTML = html;
     }
     
-    // 實時檢查網絡連接狀態
-    window.addEventListener('online', function() {
-      document.querySelector('#sync-status .sync-active').textContent = '已啟用';
-      loadOrders();
-    });
-    
-    window.addEventListener('offline', function() {
-      document.querySelector('#sync-status .sync-active').textContent = '離線模式';
-      showNotification('您已離線，同步功能暫時停用');
+    // 如果有新的訂單（從購物車結帳），自動更新訂單列表
+    window.addEventListener('storage', function(event) {
+      // 檢查是否是orders的變化
+      if (event.key === 'orders') {
+        loadOrders();
+      }
     });
   </script>
 </body>
