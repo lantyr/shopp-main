@@ -447,7 +447,7 @@ function logout() {
   showNotification('已登出');
   
   // 重新整理頁面或跳轉到首頁
-  window.location.href = 'shopping.html';
+  window.location.href = 'index.html';
 }
 
 // 頁面載入後執行的初始化
