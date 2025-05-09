@@ -1,12 +1,14 @@
 // 檔案: shopping.js
 // 產品數據 - 可以擴展更多商品
+// 檔案: shopping.js
+// 產品數據 - 可以擴展更多商品
 const products = [
-  { id: 1, name: "商品 A", price: 299, image: "https://via.placeholder.com/150", description: "這是商品A的詳細描述。" },
-  { id: 2, name: "商品 B", price: 399, image: "https://via.placeholder.com/150", description: "這是商品B的詳細描述。" },
-  { id: 3, name: "商品 C", price: 499, image: "https://via.placeholder.com/150", description: "這是商品C的詳細描述。" },
-  { id: 4, name: "商品 D", price: 599, image: "https://via.placeholder.com/150", description: "這是商品D的詳細描述。" },
-  { id: 5, name: "商品 E", price: 699, image: "https://via.placeholder.com/150", description: "這是商品E的詳細描述。" },
-];
+    { id: 1, name: "商品 A", price: 299, image: "/public/images/b.jpg", description: "描述。" },
+    { id: 2, name: "商品 B", price: 399, image: "/public/images/chicken.jpg", description: "這是商品B的詳細描述。" },
+    { id: 3, name: "商品 C", price: 499, image: "/public/images/ORANGE.webp", description: "這是商品C的詳細描述。" },
+    { id: 4, name: "商品 D", price: 599, image: "/public/images/RoastChicken.webp", description: "這是商品D的詳細描述。" },
+    { id: 5, name: "商品 E", price: 699, image: "/public/images/s.webp", description: "這是商品E的詳細描述。" },
+  ];
 
 // 全局變數
 const CART_STORAGE_KEY = 'cart'; // 統一購物車的儲存鍵名
