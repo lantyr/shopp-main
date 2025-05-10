@@ -1,0 +1,284 @@
+/* login.css - 登入和註冊頁面樣式 */
+
+body.auth-page {
+    font-family: 'Noto Sans TC', Arial, sans-serif;
+    background-color: #f5f5f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    color: #333;
+  }
+  
+  .auth-container {
+    background-color: white;
+    padding: 2.5rem;
+    border-radius: 8px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    width: 380px;
+    max-width: 90%;
+  }
+  
+  .logo-container {
+    text-align: center;
+    margin-bottom: 1.8rem;
+  }
+  
+  .logo {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #2c3e50;
+  }
+  
+  .auth-title {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 1.8rem;
+    font-weight: 500;
+  }
+  
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+  
+  .form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #555;
+    font-weight: 500;
+  }
+  
+  .form-control {
+    width: 100%;
+    padding: 0.9rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+    font-family: inherit;
+  }
+  
+  .form-control:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+  }
+  
+  .remember-me {
+    display: flex;
+    align-items: center;
+    margin-top: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .remember-me input {
+    width: auto;
+    margin-right: 8px;
+  }
+  
+  .auth-button {
+    width: 100%;
+    padding: 0.9rem;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-top: 0.8rem;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    font-family: inherit;
+  }
+  
+  .auth-button:hover {
+    background-color: #2980b9;
+  }
+  
+  .auth-button:active {
+    transform: scale(0.98);
+  }
+  
+  .help-links {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1.2rem;
+    font-size: 0.85rem;
+  }
+  
+  .help-links a {
+    color: #3498db;
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+  
+  .help-links a:hover {
+    color: #2980b9;
+    text-decoration: underline;
+  }
+  
+  .auth-alt-action {
+    text-align: center;
+    margin-top: 2rem;
+    padding-top: 1.2rem;
+    border-top: 1px solid #eee;
+    color: #666;
+  }
+  
+  .auth-alt-action a {
+    color: #3498db;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+  }
+  
+  .auth-alt-action a:hover {
+    color: #2980b9;
+    text-decoration: underline;
+  }
+  
+  .auth-message {
+    margin-top: 1rem;
+    text-align: center;
+    font-size: 0.9rem;
+    padding: 0.5rem;
+    border-radius: 4px;
+    display: none;
+  }
+  
+  .error-message {
+    color: #e74c3c;
+    background-color: rgba(231, 76, 60, 0.1);
+  }
+  
+  .success-message {
+    color: #2ecc71;
+    background-color: rgba(46, 204, 113, 0.1);
+  }
+  
+  .back-to-home {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    color: #3498db;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+  }
+  
+  .back-to-home:hover {
+    text-decoration: underline;
+  }
+  
+  /* 社群登入按鈕 */
+  .social-login {
+    margin-top: 1.5rem;
+    text-align: center;
+  }
+  
+  .social-login p {
+    color: #7f8c8d;
+    margin-bottom: 0.8rem;
+    position: relative;
+  }
+  
+  .social-login p::before,
+  .social-login p::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 30%;
+    height: 1px;
+    background-color: #ddd;
+  }
+  
+  .social-login p::before {
+    left: 0;
+  }
+  
+  .social-login p::after {
+    right: 0;
+  }
+  
+  .social-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+  }
+  
+  .social-btn {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ddd;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .social-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* 密碼強度指示器 */
+  .password-strength {
+    height: 5px;
+    margin-top: 5px;
+    border-radius: 3px;
+    background-color: #ecf0f1;
+    position: relative;
+  }
+  
+  .strength-bar {
+    height: 100%;
+    border-radius: 3px;
+    width: 0;
+    transition: width 0.3s ease, background-color 0.3s ease;
+  }
+  
+  .strength-text {
+    font-size: 0.8rem;
+    margin-top: 0.3rem;
+    display: inline-block;
+  }
+  
+  .password-requirements {
+    font-size: 0.8rem;
+    color: #7f8c8d;
+    margin-top: 0.3rem;
+  }
+  
+  /* 響應式設計 */
+  @media (max-width: 480px) {
+    .auth-container {
+      padding: 1.5rem;
+    }
+    
+    .auth-title {
+      font-size: 1.5rem;
+    }
+    
+    .back-to-home {
+      position: static;
+      display: block;
+      text-align: center;
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+    }
+    
+    .help-links {
+      flex-direction: column;
+      gap: 0.8rem;
+      align-items: center;
+    }
+    
+    .social-buttons {
+      flex-wrap: wrap;
+    }
+  }
