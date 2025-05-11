@@ -8,7 +8,13 @@ const path = require('path');
 const userRoutes = require('./routes/users');
 const productRoutes = require('./routes/products');
 const orderRoutes = require('./routes/orders');
+process.on('uncaughtException', (error) => {
+  console.error('未捕获的异常:', error.message, error.stack);
+});
 
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('未处理的Promise拒绝:', reason);
+});
 // 使用路由
 app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);
