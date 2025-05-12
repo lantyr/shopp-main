@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>會員中心 - 簡易購物網站</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f5f5f5; }
+    
+    .wrapper {
+      display: flex;
+    }
+
+    .sidebar {
+      width: 200px;
+      background: #2c3e50;
+      color: white;
+      padding: 1rem;
+      height: 100vh;
+    }
+
+    .sidebar h2 {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .sidebar ul li {
+      margin: 0.5rem 0;
+    }
+
+    .sidebar ul li a {
+      color: white;
+      text-decoration: none;
+    }
+    
+    .sidebar ul li.active a {
+      font-weight: bold;
+      color: #3498db;
+    }
+    
+    /* 購物車計數器徽章 */
+    .cart-badge {
+      position: relative;
+      display: inline-block;
+      margin-left: 5px;
+      background-color: #e74c3c;
+      color: white;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      font-size: 12px;
+      text-align: center;
+      line-height: 18px;
+    }
+
+    .main-content {
+      flex: 1;
+      padding: 1rem;
+    }
+    
+    header { 
+      background: #333; 
+      color: #fff; 
+      padding: 1rem; 
+      text-align: center; 
+    }
+    
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      margin-top: 20px;
+    }
+    
+    h1, h2 {
+      color: #333;
+    }
+    
+    .welcome {
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .member-status {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 3px;
+      background-color: #3498db;
+      color: white;
+      font-size: 14px;
+    }
+    
+    .user-info {
+      background-color: #f8f9fa;
+      padding: 15px;
+      border-radius: 5px;
+      margin-bottom: 20px;
+    }
+    
+    .user-info p {
+      margin: 5px 0;
+    }
+    
+    .account-actions {
+      margin-top: 30px;
+    }
+    
+    .btn {
+      display: inline-block;
+      background-color: #3498db;
+      color: white;
+      padding: 10px 20px;
+      text-decoration: none;
+      border-radius: 4px;
+      margin-right: 10px;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    
+    .btn:hover {
+      background-color: #2980b9;
+    }
+    
+    .btn-danger {
+      background-color: #e74c3c;
+    }
+    
+    .btn-danger:hover {
+      background-color: #c0392b;
+    }
+    
+    /* 分頁選項卡樣式 */
+    .tabs {
+      margin-top: 30px;
+      border-bottom: 1px solid #ddd;
+    }
+    
+    .tab-button {
+      background: none;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      outline: none;
+      position: relative;
+      top: 1px;
+    }
+    
+    .tab-button.active {
+      border: 1px solid #ddd;
+      border-bottom: 1px solid white;
+      border-radius: 4px 4px 0 0;
+      background-color: white;
+      font-weight: bold;
+    }
+    
+    .tab-content {
+      display: none;
+      padding: 20px 0;
+    }
+    
+    .tab-content.active {
+      display: block;
+    }
+    
+    /* 訂單摘要樣式 */
+    .order-summary {
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+    
+    .order-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      padding-bottom: 5px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .order-date {
+      color: #777;
+      font-size: 14px;
+    }
+    
+    .status-badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 3px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+    
+    .status-pending {
+      background-color: #ffeeba;
+      color: #856404;
+    }
+    
+    .status-shipped {
+      background-color: #b8daff;
+      color: #004085;
+    }
+    
+    .status-delivered {
+      background-color: #c3e6cb;
+      color: #155724;
+    }
+    
+    .order-total {
+      font-weight: bold;
+    }
+    
+    .view-detail {
+      text-align: right;
+      margin-top: 5px;
+    }
+    
+    /* 編輯資料表單 */
+    .edit-form {
+      display: none;
+      margin-top: 20px;
+      background-color: #f8f9fa;
+      padding: 15px;
+      border-radius: 5px;
+    }
+    
+    .form-group {
+      margin-bottom: 15px;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    
+    .form-control {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    
+    .form-actions {
+      margin-top: 15px;
+    }
+    
+    /* 會員等級視覺效果 */
+    .member-level {
+      display: flex;
+      margin-top: 20px;
+      background-color: #f8f9fa;
+      padding: 15px;
+      border-radius: 5px;
+    }
+    
+    .level-progress {
+      flex: 1;
+      background-color: #eee;
+      height: 10px;
+      border-radius: 5px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+    
+    .level-bar {
+      height: 100%;
+      background-color: #3498db;
+      width: 45%; /* 示範用，實際應該依據用戶數據動態設定 */
+    }
+    
+    .level-info {
+      margin-left: 20px;
+      flex: 0 0 200px;
+    }
+    
+    /* 通知樣式 */
+    .notification {
+      padding: 10px;
+      background-color: #d4edda;
+      color: #155724;
+      border-radius: 4px;
+      margin-bottom: 15px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <aside class="sidebar">
+      <h2>功能選單</h2>
+      <ul>
+        <li><a href="index.html">商品列表</a></li>
+        <li class="active"><a href="member.html">會員中心</a></li>
+        <li>
+          <a href="cart.html">購物車</a>
+          <span id="cart-count" class="cart-badge" style="display: none;">0</span>
+        </li>
+        <li><a href="orders.html">訂單查詢</a></li>
+      </ul>
+    </aside>
+
+    <main class="main-content">
+      <header>
+        <h1>會員中心</h1>
+      </header>
+
+      <div class="container">
+        <div id="notification" class="notification">
+          資料已成功更新！
+        </div>
+        
+        <div class="welcome">
+          <h2>歡迎回來，<span id="memberName">使用者</span>！</h2>
+          <span class="member-status" id="memberLevel">一般會員</span>
+        </div>
+        
+        <div class="member-level">
+          <div>
+            <p>消費積分：<strong id="memberPoints">0</strong> 點</p>
+            <p>距離升級還需：<strong id="pointsToNextLevel">1000</strong> 點</p>
+            <div class="level-progress">
+              <div class="level-bar" id="levelProgressBar"></div>
+            </div>
+          </div>
+          <div class="level-info">
+            <p><strong>會員優惠：</strong></p>
+            <p>生日禮金：NT$ 100</p>
+            <p>全館商品 95 折</p>
+          </div>
+        </div>
+        
+        <div class="tabs">
+          <button class="tab-button active" data-tab="profile">個人資料</button>
+          <button class="tab-button" data-tab="orders">我的訂單</button>
+          <button class="tab-button" data-tab="wishlist">我的收藏</button>
+        </div>
+        
+        <!-- 個人資料頁籤 -->
+        <div id="profile" class="tab-content active">
+          <div class="user-info">
+            <h3>會員資料</h3>
+            <p><strong>會員ID:</strong> <span id="memberId">-</span></p>
+            <p><strong>電子郵件:</strong> <span id="memberEmail">-</span></p>
+            <p><strong>註冊日期:</strong> <span id="memberRegDate">-</span></p>
+            <p><strong>手機號碼:</strong> <span id="memberPhone">-</span></p>
+            <p><strong>生日:</strong> <span id="memberBirthday">-</span></p>
+          </div>
+          
+          <div class="account-actions">
+            <h3>帳戶管理</h3>
+            <button class="btn" id="editProfileBtn">編輯個人資料</button>
+            <button class="btn" id="changePasswordBtn">修改密碼</button>
+            <button class="btn btn-danger" id="logoutBtn">登出</button>
+          </div>
+          
+          <!-- 編輯個人資料表單 -->
+          <div id="editProfileForm" class="edit-form">
+            <h3>編輯個人資料</h3>
+            <div class="form-group">
+              <label for="editName">姓名</label>
+              <input type="text" id="editName" class="form-control">
+            </div>
+            <div class="form-group">
+              <label for="editEmail">電子郵件</label>
+              <input type="email" id="editEmail" class="form-control">
+            </div>
+            <div class="form-group">
+              <label for="editPhone">手機號碼</label>
+              <input type="tel" id="editPhone" class="form-control">
+            </div>
+            <div class="form-group">
+              <label for="editBirthday">生日</label>
+              <input type="date" id="editBirthday" class="form-control">
+            </div>
+            <div class="form-actions">
+              <button class="btn" id="saveProfileBtn">儲存變更</button>
+              <button class="btn" id="cancelEditBtn" style="background-color: #6c757d;">取消</button>
+            </div>
+          </div>
+          
+          <!-- 修改密碼表單 -->
+          <div id="changePasswordForm" class="edit-form">
+            <h3>修改密碼</h3>
+            <div class="form-group">
+              <label for="currentPassword">目前密碼</label>
+              <input type="password" id="currentPassword" class="form-control">
+            </div>
+            <div class="form-group">
+              <label for="newPassword">新密碼</label>
+              <input type="password" id="newPassword" class="form-control">
+            </div>
+            <div class="form-group">
+              <label for="confirmNewPassword">確認新密碼</label>
+              <input type="password" id="confirmNewPassword" class="form-control">
+            </div>
+            <div class="form-actions">
+              <button class="btn" id="savePasswordBtn">儲存變更</button>
+              <button class="btn" id="cancelPasswordBtn" style="background-color: #6c757d;">取消</button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 我的訂單頁籤 -->
+        <div id="orders" class="tab-content">
+          <h3>最近訂單</h3>
+          <div id="recentOrders">
+            <!-- 訂單將在這裡動態加載 -->
+          </div>
+          <div style="text-align: center; margin-top: 20px;">
+            <a href="orders.html" class="btn">查看所有訂單</a>
+          </div>
+        </div>
+        
+        <!-- 我的收藏頁籤 -->
+        <div id="wishlist" class="tab-content">
+          <h3>我的收藏商品</h3>
+          <div id="wishlistItems">
+            <!-- 收藏商品將在這裡動態加載 -->
+            <p>您尚未收藏任何商品。</p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // 全局變數
+    let currentTab = 'profile';
+    let memberData = {};
+    
+    // 當頁面加載時執行初始化
+    document.addEventListener('DOMContentLoaded', function() {
+      // 載入會員資料
+      loadMemberInfo();
+      
+      // 更新購物車計數
+      updateCartCount();
+      
+      // 載入最近訂單
+      loadRecentOrders();
+      
+      // 載入收藏商品
+      loadWishlist();
+      
+      // 設置頁籤切換
+      setupTabs();
+      
+      // 設置按鈕事件
+      setupButtonEvents();
+      
+      // 監聽購物車變化
+      syncWithCart();
+    });
+    
+    // 載入會員資料
+    function loadMemberInfo() {
+      // 從localStorage取得會員資訊
+      memberData = JSON.parse(localStorage.getItem('memberInfo')) || {
+        id: '001',
+        name: '訪客',
+        email: 'guest@example.com',
+        regDate: '2023-01-01',
+        phone: '-',
+        birthday: '-',
+        level: '一般會員',
+        points: 0
+      };
+      
+      // 更新頁面上的會員資訊
+      document.getElementById('memberName').textContent = memberData.name;
+      document.getElementById('memberId').textContent = memberData.id;
+      document.getElementById('memberEmail').textContent = memberData.email;
+      document.getElementById('memberRegDate').textContent = memberData.regDate;
+      document.getElementById('memberPhone').textContent = memberData.phone || '-';
+      document.getElementById('memberBirthday').textContent = memberData.birthday || '-';
+      document.getElementById('memberLevel').textContent = memberData.level || '一般會員';
+      
+      // 更新會員等級相關資訊
+      const points = memberData.points || 0;
+      document.getElementById('memberPoints').textContent = points;
+      
+      // 假設升級需要1000點
+      const pointsNeeded = 1000;
+      const pointsToNext = Math.max(0, pointsNeeded - points);
+      document.getElementById('pointsToNextLevel').textContent = pointsToNext;
+      
+      // 更新進度條
+      const progress = Math.min(100, (points / pointsNeeded) * 100);
+      document.getElementById('levelProgressBar').style.width = progress + '%';
+      
+      // 預填編輯表單
+      document.getElementById('editName').value = memberData.name;
+      document.getElementById('editEmail').value = memberData.email;
+      document.getElementById('editPhone').value = memberData.phone || '';
+      document.getElementById('editBirthday').value = memberData.birthday || '';
+    }
+    
+    // 更新購物車計數
+    function updateCartCount() {
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const cartCountElement = document.getElementById('cart-count');
+      
+      if (cart.length > 0) {
+        // 計算總商品數量
+        const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+        cartCountElement.textContent = totalItems;
+        cartCountElement.style.display = 'inline-block';
+      } else {
+        cartCountElement.style.display = 'none';
+      }
+    }
+    
+    // 載入最近訂單
+    function loadRecentOrders() {
+      // 從localStorage取得訂單數據
+      const orders = JSON.parse(localStorage.getItem('orders')) || [];
+      const recentOrdersContainer = document.getElementById('recentOrders');
+      
+      if (orders.length === 0) {
+        recentOrdersContainer.innerHTML = '<p>您尚未有任何訂單記錄。</p>';
+        return;
+      }
+      
+      // 依照日期排序訂單（最新的在前）
+      orders.sort((a, b) => new Date(b.orderDate) - new Date(a.orderDate));
+      
+      // 只顯示最近3筆訂單
+      const recentOrders = orders.slice(0, 3);
+      
+      let html = '';
+      recentOrders.forEach(order => {
+        // 生成狀態標籤的CSS類
+        let statusClass = '';
+        switch(order.status) {
+          case '待處理':
+            statusClass = 'status-pending';
+            break;
+          case '已出貨':
+            statusClass = 'status-shipped';
+            break;
+          case '已送達':
+            statusClass = 'status-delivered';
+            break;
+          default:
+            statusClass = 'status-pending';
+        }
+        
+        // 格式化日期
+        const orderDate = new Date(order.orderDate);
+        const formattedDate = orderDate.getFullYear() + '/' + 
+                             (orderDate.getMonth() + 1).toString().padStart(2, '0') + '/' + 
+                             orderDate.getDate().toString().padStart(2, '0');
+        
+        // 創建訂單摘要
+        html += `
+          <div class="order-summary">
+            <div class="order-header">
+              <div>
+                <strong>訂單編號:</strong> ${order.id}
+                <div class="order-date">訂購日期: ${formattedDate}</div>
+              </div>
+              <div>
+                <span class="status-badge ${statusClass}">${order.status}</span>
+              </div>
+            </div>
+            <div class="order-total">
+              總金額: NT$ ${order.totalAmount.toFixed(0)}
+            </div>
+            <div class="view-detail">
+              <a href="orders.html?id=${order.id}" style="color: #3498db;">查看詳情</a>
+            </div>
+          </div>
+        `;
+      });
+      
+      recentOrdersContainer.innerHTML = html;
+    }
+    
+    // 載入收藏商品
+    function loadWishlist() {
+      // 這裡僅為示範，實際應從localStorage或服務器獲取收藏數據
+      const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+      const wishlistContainer = document.getElementById('wishlistItems');
+      
+      if (wishlist.length === 0) {
+        wishlistContainer.innerHTML = '<p>您尚未收藏任何商品。</p>';
+        return;
+      }
+      
+      // 此處可以添加收藏商品的HTML生成代碼
+    }
+    
+    // 設置頁籤切換
+    function setupTabs() {
+      document.querySelectorAll('.tab-button').forEach(button => {
+        button.addEventListener('click', function() {
+          // 取得目標頁籤
+          const targetTab = this.dataset.tab;
+          
+          // 移除所有頁籤和內容的活動狀態
+          document.querySelectorAll('.tab-button').forEach(btn => {
+            btn.classList.remove('active');
+          });
+          document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.remove('active');
+          });
+          
+          // 將目標頁籤和內容設為活動狀態
+          this.classList.add('active');
+          document.getElementById(targetTab).classList.add('active');
+          
+          // 更新當前頁籤
+          currentTab = targetTab;
+        });
+      });
+    }
+    
+    // 設置按鈕事件
+    function setupButtonEvents() {
+      // 編輯個人資料按鈕
+      document.getElementById('editProfileBtn').addEventListener('click', function() {
+        document.getElementById('editProfileForm').style.display = 'block';
+        document.getElementById('changePasswordForm').style.display = 'none';
+      });
+      
+      // 取消編輯按鈕
+      document.getElementById('cancelEditBtn').addEventListener('click', function() {
+        document.getElementById('editProfileForm').style.display = 'none';
+      });
+      
+      // 儲存個人資料按鈕
+      document.getElementById('saveProfileBtn').addEventListener('click', function() {
+        // 獲取表單數據
+        const name = document.getElementById('editName').value;
+        const email = document.getElementById('editEmail').value;
+        const phone = document.getElementById('editPhone').value;
+        const birthday = document.getElementById('editBirthday').value;
+        
+        // 更新會員數據
+        memberData.name = name;
+        memberData.email = email;
+        memberData.phone = phone;
+        memberData.birthday = birthday;
+        
+        // 儲存到localStorage
+        localStorage.setItem('memberInfo', JSON.stringify(memberData));
+        
+        // 更新頁面顯示
+        loadMemberInfo();
+        
+        // 隱藏表單並顯示成功通知
+        document.getElementById('editProfileForm').style.display = 'none';
+        showNotification('個人資料已成功更新！');
+      });
+      
+      // 修改密碼按鈕
+      document.getElementById('changePasswordBtn').addEventListener('click', function() {
+        document.getElementById('changePasswordForm').style.display = 'block';
+        document.getElementById('editProfileForm').style.display = 'none';
+      });
+      
+      // 取消修改密碼按鈕
+      document.getElementById('cancelPasswordBtn').addEventListener('click', function() {
+        document.getElementById('changePasswordForm').style.display = 'none';
+      });
+      
+      // 儲存密碼按鈕
+      document.getElementById('savePasswordBtn').addEventListener('click', function() {
+        const currentPassword = document.getElementById('currentPassword').value;
+        const newPassword = document.getElementById('newPassword').value;
+        const confirmNewPassword = document.getElementById('confirmNewPassword').value;
+        
+        // 檢查密碼是否匹配（實際應用中應該有更複雜的驗證）
+        if (newPassword !== confirmNewPassword) {
+          alert('新密碼與確認密碼不符');
+          return;
+        }
+        
+        // 此處應有實際的密碼更新邏輯
+        
+        // 隱藏表單，清空輸入，顯示成功通知
+        document.getElementById('changePasswordForm').style.display = 'none';
+        document.getElementById('currentPassword').value = '';
+        document.getElementById('newPassword').value = '';
+        document.getElementById('confirmNewPassword').value = '';
+        showNotification('密碼已成功更新！');
+      });
+      
+      // 登出按鈕
+      document.getElementById('logoutBtn').addEventListener('click', function() {
+        localStorage.removeItem('token');
+        alert('已登出');
+        window.location.href = 'login.html';
+      });
+    }
+    
+    // 顯示通知訊息
+    function showNotification(message) {
+      const notification = document.getElementById('notification');
+      notification.textContent = message;
+      notification.style.display = 'block';
+      
+      // 3秒後自動隱藏通知
+      setTimeout(function() {
+        notification.style.display = 'none';
+      }, 3000);
+    }
+    
+    // 同步購物車
+    function syncWithCart() {
+      // 監聽localStorage變化
+      window.addEventListener('storage', function(event) {
+        // 檢查是否是購物車的變化
+        if (event.key === 'cart') {
+          updateCartCount();
+        }
+        
+        // 檢查是否是訂單的變化
+        if (event.key === 'orders' && currentTab === 'orders') {
+          loadRecentOrders();
+        }
+      });
+    }
+  </script>
+</body>
+</html>

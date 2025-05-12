@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>會員登入 - 簡易購物網站</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Noto Sans TC', Arial, sans-serif;
+      background-color: #f5f5f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      color: #333;
+    }
+    
+    .login-container {
+      background-color: white;
+      padding: 2.5rem;
+      border-radius: 8px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      width: 380px;
+      max-width: 90%;
+    }
+    
+    .logo-container {
+      text-align: center;
+      margin-bottom: 1.8rem;
+    }
+    
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #2c3e50;
+    }
+    
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 1.8rem;
+      font-weight: 500;
+    }
+    
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #555;
+      font-weight: 500;
+    }
+    
+    input {
+      width: 100%;
+      padding: 0.9rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box;
+      transition: border-color 0.3s ease;
+      font-family: inherit;
+    }
+    
+    input:focus {
+      outline: none;
+      border-color: #3498db;
+      box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+    }
+    
+    .remember-me {
+      display: flex;
+      align-items: center;
+      margin-top: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .remember-me input {
+      width: auto;
+      margin-right: 8px;
+    }
+    
+    button {
+      width: 100%;
+      padding: 0.9rem;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      font-weight: 500;
+      margin-top: 0.8rem;
+      transition: background-color 0.3s ease, transform 0.1s ease;
+      font-family: inherit;
+    }
+    
+    button:hover {
+      background-color: #2980b9;
+    }
+    
+    button:active {
+      transform: scale(0.98);
+    }
+    
+    .help-links {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 1.2rem;
+      font-size: 0.85rem;
+    }
+    
+    .help-links a {
+      color: #3498db;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+    
+    .help-links a:hover {
+      color: #2980b9;
+      text-decoration: underline;
+    }
+    
+    .register-link {
+      text-align: center;
+      margin-top: 2rem;
+      padding-top: 1.2rem;
+      border-top: 1px solid #eee;
+      color: #666;
+    }
+    
+    .register-link a {
+      color: #3498db;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+    
+    .register-link a:hover {
+      color: #2980b9;
+      text-decoration: underline;
+    }
+    
+    .error-message {
+      color: #e74c3c;
+      margin-top: 1rem;
+      text-align: center;
+      font-size: 0.9rem;
+      display: none;
+      padding: 0.5rem;
+      background-color: rgba(231, 76, 60, 0.1);
+      border-radius: 4px;
+    }
+    
+    .back-to-home {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      color: #3498db;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+    }
+    
+    .back-to-home:hover {
+      text-decoration: underline;
+    }
+    
+    /* 社群登入按鈕 */
+    .social-login {
+      margin-top: 1.5rem;
+      text-align: center;
+    }
+    
+    .social-login p {
+      color: #7f8c8d;
+      margin-bottom: 0.8rem;
+      position: relative;
+    }
+    
+    .social-login p::before,
+    .social-login p::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      width: 30%;
+      height: 1px;
+      background-color: #ddd;
+    }
+    
+    .social-login p::before {
+      left: 0;
+    }
+    
+    .social-login p::after {
+      right: 0;
+    }
+    
+    .social-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+    }
+    
+    .social-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #ddd;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .social-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* 響應式設計 */
+    @media (max-width: 480px) {
+      .login-container {
+        padding: 1.5rem;
+      }
+      
+      h1 {
+        font-size: 1.5rem;
+      }
+      
+      .back-to-home {
+        position: static;
+        display: block;
+        text-align: center;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+      }
+      
+      .help-links {
+        flex-direction: column;
+        gap: 0.8rem;
+        align-items: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a href="index.html" class="back-to-home">← 返回首頁</a>
+  
+  <div class="login-container">
+    <div class="logo-container">
+      <div class="logo">簡易購物網站</div>
+    </div>
+    
+    <h1>會員登入</h1>
+    
+    <form id="loginForm">
+      <div class="form-group">
+        <label for="email">電子郵件</label>
+        <input type="email" id="email" required autocomplete="email">
+      </div>
+      
+      <div class="form-group">
+        <label for="password">密碼</label>
+        <input type="password" id="password" required autocomplete="current-password">
+      </div>
+      
+      <div class="remember-me">
+        <input type="checkbox" id="rememberMe">
+        <label for="rememberMe">記住我</label>
+      </div>
+      
+      <button type="submit">登入</button>
+      
+      <div id="errorMessage" class="error-message"></div>
+    </form>
+    
+    <div class="help-links">
+      <a href="#">忘記密碼？</a>
+      <a href="#">需要協助？</a>
+    </div>
+    
+    <div class="social-login">
+      <p>或使用以下方式登入</p>
+      <div class="social-buttons">
+        <div class="social-btn" title="Google 登入">G</div>
+        <div class="social-btn" title="Facebook 登入">f</div>
+        <div class="social-btn" title="LINE 登入">L</div>
+      </div>
+    </div>
+    
+    <div class="register-link">
+      還沒有帳號？<a href="register.html">立即註冊</a>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // 表單提交處理
+      document.getElementById('loginForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const rememberMe = document.getElementById('rememberMe').checked;
+        
+        // 清除之前的錯誤訊息
+        const errorMessage = document.getElementById('errorMessage');
+        errorMessage.style.display = 'none';
+        
+        // 基本驗證
+        if (!email || !password) {
+          showError('請填寫所有欄位');
+          return;
+        }
+        
+        try {
+          // 在這裡可以使用 fetch API 發送請求到後端 API
+          // 此處使用模擬登入，實際應用中請替換為真實的 API 呼叫
+          
+          // 模擬登入驗證 - 使用 localStorage 中儲存的用戶資料
+          const users = JSON.parse(localStorage.getItem('users')) || [];
+          const user = users.find(u => u.email === email && u.password === password);
+          
+          if (!user) {
+            showError('電子郵件或密碼不正確');
+            return;
+          }
+          
+          // 登入成功
+          // 1. 設置 token (實際應用中應從後端獲取)
+          const token = 'simulated-jwt-token-' + Date.now();
+          localStorage.setItem('token', token);
+          
+          // 2. 設置會員資料
+          const memberInfo = {
+            id: user.id,
+            name: user.username,
+            email: user.email,
+            regDate: user.regDate,
+            level: '一般會員',
+            points: 0
+          };
+          localStorage.setItem('memberInfo', JSON.stringify(memberInfo));
+          
+          // 3. 如果用戶選擇記住我，可以設置持久化存儲
+          if (rememberMe) {
+            // 實際應用中可能會設置 cookie 或其他持久化機制
+            localStorage.setItem('rememberedUser', email);
+          } else {
+            localStorage.removeItem('rememberedUser');
+          }
+          
+          // 4. 跳轉到首頁
+          window.location.href = 'index.html';
+          
+        } catch (error) {
+          console.error('登入錯誤:', error);
+          showError('登入過程中發生錯誤，請稍後再試');
+        }
+      });
+      
+      // 填充記住的用戶
+      const rememberedUser = localStorage.getItem('rememberedUser');
+      if (rememberedUser) {
+        document.getElementById('email').value = rememberedUser;
+        document.getElementById('rememberMe').checked = true;
+      }
+      
+      // 顯示錯誤訊息
+      function showError(message) {
+        const errorMessage = document.getElementById('errorMessage');
+        errorMessage.textContent = message;
+        errorMessage.style.display = 'block';
+      }
+      
+      // 社群登入按鈕
+      document.querySelectorAll('.social-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          alert('社群登入功能尚未實作');
+        });
+      });
+    });
+  </script>
+</body>
+</html>
